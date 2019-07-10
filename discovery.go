@@ -71,6 +71,20 @@ func SetLocator(locator Locator) Option {
 	}
 }
 
+// SetLogger sets the logger service
+func SetLogger(logger LogAdapter) Option {
+	return func(args *Options) {
+		args.LogAdapter = logger
+	}
+}
+
+// SetTracer sets the tracer to be used
+func SetTracer(tracer TraceAdapter) Option {
+	return func(args *Options) {
+		args.TraceAdapter = tracer
+	}
+}
+
 // NewDiscovery -
 func NewDiscovery(opts ...Option) *Discover {
 	sess := session.Must(session.NewSession())
@@ -80,8 +94,8 @@ func NewDiscovery(opts ...Option) *Discover {
 		AutomateAdapter: automate.NewSSMAdapter(ssm.New(sess)),
 		PubsubAdapter:   pubsub.NewSNSAdapter(sns.New(sess)),
 		Locator:         locator.NewCloudmapLocator(servicediscovery.New(sess)),
-		LogAdapter: logger.NewSTDOutAdapter(),
-		TraceAdapter: tracer.NewXrayAdapter(),
+		LogAdapter:      logger.NewSTDOutAdapter(),
+		TraceAdapter:    tracer.NewXrayAdapter(),
 	}
 
 	for _, opt := range opts {
@@ -94,8 +108,8 @@ func NewDiscovery(opts ...Option) *Discover {
 		AutomateAdapter: args.AutomateAdapter,
 		PubsubAdapter:   args.PubsubAdapter,
 		Locator:         args.Locator,
-		LogAdapter: args.LogAdapter,
-		TraceAdapter: args.TraceAdapter,
+		LogAdapter:      args.LogAdapter,
+		TraceAdapter:    args.TraceAdapter,
 	}
 }
 

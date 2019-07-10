@@ -75,11 +75,21 @@ func (pa *mockPubsubAdapter) Subscribe(
 	return channel, nil
 }
 
+type mockLogger struct{}
+
+func (ml *mockLogger) Log(service *types.Service, message string) {}
+
+type mockTracer struct{}
+
+func (mt *mockTracer) Trace(service *types.Service) {}
+
 func TestCanCallRequest(t *testing.T) {
-	discover := &Discover{
-		Locator:         &mockLocator{},
-		FunctionAdapter: &mockFunctionAdapter{},
-	}
+	discover := NewDiscovery(
+		SetLocator(&mockLocator{}),
+		SetAutomate(&mockAutomateAdapter{}),
+		SetLogger(&mockLogger{}),
+		SetTracer(&mockTracer{}),
+	)
 	discover.Request("service->handler", types.Request{
 		Body: []byte(""),
 	}, nil)
@@ -89,6 +99,8 @@ func TestCanCallAutomate(t *testing.T) {
 	discover := NewDiscovery(
 		SetLocator(&mockLocator{}),
 		SetAutomate(&mockAutomateAdapter{}),
+		SetLogger(&mockLogger{}),
+		SetTracer(&mockTracer{}),
 	)
 	_, err := discover.Automate("service", types.Request{
 		Body: []byte(""),
@@ -100,6 +112,8 @@ func TestCanCallPubSub(t *testing.T) {
 	discover := NewDiscovery(
 		SetLocator(&mockLocator{}),
 		SetPubsub(&mockPubsubAdapter{}),
+		SetLogger(&mockLogger{}),
+		SetTracer(&mockTracer{}),
 	)
 	err := discover.Publish("my-topic", types.Request{
 		Body: []byte(""),
@@ -117,6 +131,8 @@ func TestCanCallQueue(t *testing.T) {
 		SetQueue(&mockQueueAdapter{
 			messages: make(chan *types.Response),
 		}),
+		SetLogger(&mockLogger{}),
+		SetTracer(&mockTracer{}),
 	)
 	token, err := discover.Queue("my-queue", types.Request{
 		Body: val,
