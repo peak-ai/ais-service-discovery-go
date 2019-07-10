@@ -12,7 +12,7 @@ Being AWS centric, the default options are:
 - Queue: AWS SQS
 - Automate: AWS SSM
 
-## Registering a service - Cloudformation
+## Registering a service - Cloudformation
 
 @todo - Add example of Cloudformation/Cloudmap yml here
 
