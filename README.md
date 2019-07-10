@@ -14,7 +14,27 @@ Being AWS centric, the default options are:
 
 ## Registering a service - Cloudformation
 
-@todo - Add example of Cloudformation/Cloudmap yml here
+For the Cloudmap locator, the easiest way to register a service is through Cloudformation (or Terraform etc):
+
+```yaml
+CloudMapService:
+  Type: AWS::ServiceDiscovery::Service
+  Properties:
+    Description: User service
+    Name: users
+    NamespaceId: <namespace-id-here>
+
+CreateUserInstance:
+  Type: "AWS::ServiceDiscovery::Instance"
+  Properties:
+    InstanceAttributes:
+      arn: create-user
+      handler: create-job-run
+      type: function
+    InstanceId: create-user
+    ServiceId:
+      Ref: CloudMapService
+```
 
 
 ## Use with default settings
@@ -47,7 +67,7 @@ func main() {
 
 ```golang
 d := discover.NewDiscovery()
-d.Request("my-namespace.my-service->my-function", types.Request{
+d.Request("my-namespace.users->create-user", types.Request{
   Body: []byte("{ \"hello\": \"world\" }"),
 }, opts)
 ```
