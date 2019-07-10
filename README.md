@@ -18,7 +18,7 @@ Being AWS centric, the default options are:
 func main() {
   d := discover.NewDiscovery()
 
-  token, err := d.Queue("ais-latest.my-queue", types.Request{
+  token, err := d.Queue("acme-prod.my-queue", types.Request{
     Body: []byte("{}"),
   }, nil)
   ...
