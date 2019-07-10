@@ -1,4 +1,4 @@
-# AIS Service Discovery for Golang
+# Cloud Application Framework
 
 This library aims to expose a common set of interfaces for handling common cloud platform tasks. Such as queuing messages, publishing events, calling cloud functions etc.
 
