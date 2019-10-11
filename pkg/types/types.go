@@ -11,7 +11,7 @@ type Service struct {
 type Signature struct {
 	Namespace string
 	Service   string
-	Handler   string
+	Instance   string
 }
 
 // ServiceRequest -

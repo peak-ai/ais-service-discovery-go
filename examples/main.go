@@ -17,19 +17,19 @@ func main() {
 	}
 	log.Println(string(res.Body))
 
-	messages, err := discovery.Listen("acme-prod.service-discovery-test-queue", nil)
+	messages, err := discovery.Listen("acme-prod.service-discovery->test-queue", nil)
 	if err != nil {
 		log.Panic(err)
 	}
 
 	go func() {
-		discovery.Queue("acme-prod.service-discovery-test-queue", types.Request{
+		discovery.Queue("acme-prod.service-discovery->test-queue", types.Request{
 			Body: []byte(`{ "message": "hello" }`),
 		}, nil)
 	}()
 
 	go func() {
-		discovery.Queue("acme-prod.service-discovery-test-queue", types.Request{
+		discovery.Queue("acme-prod.service-discovery->test-queue", types.Request{
 			Body: []byte(`{ "message": "again" }`),
 		}, nil)
 	}()

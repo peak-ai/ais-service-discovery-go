@@ -10,7 +10,7 @@ import (
 func ParseAddr(signature string) (*types.Signature, error) {
 	namespace := ""
 	service := ""
-	handler := ""
+	instance := ""
 	parts := strings.Split(signature, ".")
 	if len(parts) == 2 {
 		namespace = parts[0]
@@ -19,14 +19,12 @@ func ParseAddr(signature string) (*types.Signature, error) {
 		namespace = "default"
 		service = parts[0]
 	}
-	if strings.Contains(service, "->") {
-		svcParts := strings.Split(service, "->")
-		service = svcParts[0]
-		handler = svcParts[1]
-	}
+	svcParts := strings.Split(service, "->")
+	service = svcParts[0]
+	instance = svcParts[1]
 	return &types.Signature{
 		Namespace: namespace,
 		Service:   service,
-		Handler:   handler,
+		Instance:   instance,
 	}, nil
 }

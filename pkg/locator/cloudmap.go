@@ -24,19 +24,19 @@ func (l *CloudmapLocator) Discover(service *types.Signature) (*types.Service, er
 		ServiceName:   aws.String(service.Service),
 	}
 
-	if service.Handler != "" {
-		input.QueryParameters = make(map[string]*string)
-		input.QueryParameters["handler"] = aws.String(service.Handler)
-	}
-
 	instanceOutput, err := l.client.DiscoverInstances(input)
 	if err != nil {
 		return nil, err
 	}
 
-	// @todo - we might want to actually deal with
-	// multiple instances at some point.
-	instance := instanceOutput.Instances[0]
+	var instance *servicediscovery.HttpInstanceSummary
+	instances := instanceOutput.Instances
+	for _, i := range instances {
+		if i.InstanceId == aws.String(service.Instance) {
+			instance = i
+		}
+	}
+
 
 	// @todo - 'arn' is AWS specific, consider a more
 	// generalisd term for this concept

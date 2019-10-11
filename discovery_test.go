@@ -102,7 +102,7 @@ func TestCanCallAutomate(t *testing.T) {
 		SetLogger(&mockLogger{}),
 		SetTracer(&mockTracer{}),
 	)
-	_, err := discover.Automate("service", types.Request{
+	_, err := discover.Automate("service->handler", types.Request{
 		Body: []byte(""),
 	}, nil)
 	assert.NoError(t, err)
@@ -115,7 +115,7 @@ func TestCanCallPubSub(t *testing.T) {
 		SetLogger(&mockLogger{}),
 		SetTracer(&mockTracer{}),
 	)
-	err := discover.Publish("my-topic", types.Request{
+	err := discover.Publish("my-service->my-topic", types.Request{
 		Body: []byte(""),
 	}, nil)
 	assert.NoError(t, err)
@@ -134,13 +134,13 @@ func TestCanCallQueue(t *testing.T) {
 		SetLogger(&mockLogger{}),
 		SetTracer(&mockTracer{}),
 	)
-	token, err := discover.Queue("my-queue", types.Request{
+	token, err := discover.Queue("my-service->my-queue", types.Request{
 		Body: val,
 	}, nil)
 	assert.NoError(t, err)
 	assert.Equal(t, token, "abc123")
 
-	messages, err := discover.Listen("my-queue", nil)
+	messages, err := discover.Listen("my-service->my-queue", nil)
 	log.Println(messages)
 	assert.NoError(t, err)
 	assert.Equal(t, <-messages, response)
