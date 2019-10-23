@@ -43,7 +43,7 @@ CreateUserInstance:
 func main() {
   d := discover.NewDiscovery()
 
-  token, err := d.Queue("acme-prod.my-queue", types.Request{
+  token, err := d.Queue("acme-prod.my-service->my-queue", types.Request{
     Body: []byte("{}"),
   }, nil)
   ...
@@ -76,12 +76,12 @@ d.Request("my-namespace.users->create-user", types.Request{
 
 ```golang
 d := discover.NewDiscovery()
-d.Queue("my-namespace.my-queue", types.Request{
+d.Queue("my-namespace.my-service->my-queue", types.Request{
   Body: jsonString,
 }, nil)
 
 go func() {
-  messages, err := d.Listen("my-namespace.my-queue", opts)
+  messages, err := d.Listen("my-namespace.my-service->my-queue", opts)
   for message := range message {
     log.Println(string(message.Body))
   }
@@ -92,7 +92,7 @@ go func() {
 
 ```golang
 d := discovery.NewDiscovery()
-d.Publish("my-namespace.my-event", types.Request{
+d.Publish("my-namespace.my-service->my-event", types.Request{
   Body: jsonEvent,
 })
 ```
@@ -101,7 +101,7 @@ d.Publish("my-namespace.my-event", types.Request{
 
 ```golang
 d := discovery.NewDiscovery()
-d.Automate("my-namespace.my-script", types.Request{
+d.Automate("my-namespace.my-service->my-script", types.Request{
   Body: jsonEvent,
 })
 ```
