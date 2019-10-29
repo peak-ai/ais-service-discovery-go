@@ -89,6 +89,7 @@ func TestCanCallRequest(t *testing.T) {
 		SetAutomate(&mockAutomateAdapter{}),
 		SetLogger(&mockLogger{}),
 		SetTracer(&mockTracer{}),
+		SetFunction(&mockFunctionAdapter{}),
 	)
 	discover.Request("service->handler", types.Request{
 		Body: []byte(""),
