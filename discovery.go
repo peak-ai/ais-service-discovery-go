@@ -85,19 +85,24 @@ func SetTracer(tracer TraceAdapter) Option {
 	}
 }
 
+// WithAWSBackend initializes the Discovery object with default AWS services.
+// Override these services by using the Set methods.
+func WithAWSBackend() Option {
+	return func(args *Options) {
+		sess := session.Must(session.NewSession())
+		args.QueueAdapter = queue.NewSQSAdapter(sqs.New(sess))
+		args.FunctionAdapter = function.NewLambdaAdapter(lambda.New(sess))
+		args.AutomateAdapter = automate.NewSSMAdapter(ssm.New(sess))
+		args.PubsubAdapter = pubsub.NewSNSAdapter(sns.New(sess))
+		args.Locator = locator.NewCloudmapLocator(servicediscovery.New(sess))
+		args.LogAdapter = logger.NewSTDOutAdapter()
+		args.TraceAdapter = tracer.NewXrayAdapter()
+	}
+}
+
 // NewDiscovery -
 func NewDiscovery(opts ...Option) *Discover {
-	sess := session.Must(session.NewSession())
-	args := &Options{
-		QueueAdapter:    queue.NewSQSAdapter(sqs.New(sess)),
-		FunctionAdapter: function.NewLambdaAdapter(lambda.New(sess)),
-		AutomateAdapter: automate.NewSSMAdapter(ssm.New(sess)),
-		PubsubAdapter:   pubsub.NewSNSAdapter(sns.New(sess)),
-		Locator:         locator.NewCloudmapLocator(servicediscovery.New(sess)),
-		LogAdapter:      logger.NewSTDOutAdapter(),
-		TraceAdapter:    tracer.NewXrayAdapter(),
-	}
-
+	args := &Options{}
 	for _, opt := range opts {
 		opt(args)
 	}
