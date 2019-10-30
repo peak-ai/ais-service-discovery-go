@@ -7,17 +7,17 @@ import (
 	"github.com/aws/aws-sdk-go/service/lambda"
 )
 
-// LambdaAdapter -
+// LambdaAdapter is an implentation of the FunctionAdapter using AWS Lambda
 type LambdaAdapter struct {
 	client *lambda.Lambda
 }
 
-// NewLambdaAdapter -
+// NewLambdaAdapter creates a new instance of the LambdaAdapter
 func NewLambdaAdapter(client *lambda.Lambda) *LambdaAdapter {
 	return &LambdaAdapter{client}
 }
 
-// Call a lambda function
+// Call exeutes a lambda function
 func (la *LambdaAdapter) Call(service *types.Service, request types.Request, opts types.Options) (*types.Response, error) {
 	input := &lambda.InvokeInput{
 		FunctionName: aws.String(service.Addr),

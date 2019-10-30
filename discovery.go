@@ -33,7 +33,7 @@ type Options struct {
 	TraceAdapter
 }
 
-// Option -
+// Option is a function that modifies the Options object
 type Option func(*Options)
 
 // SetQueue sets the given queue adapter to be used
@@ -85,7 +85,7 @@ func SetTracer(tracer TraceAdapter) Option {
 	}
 }
 
-// NewDiscovery -
+// NewDiscovery creates a new Discover object to communicate with the various services
 func NewDiscovery(opts ...Option) *Discover {
 	sess := session.Must(session.NewSession())
 	args := &Options{
@@ -113,7 +113,7 @@ func NewDiscovery(opts ...Option) *Discover {
 	}
 }
 
-// QueueAdapter -
+// QueueAdapter is an interface defining a Queue service
 type QueueAdapter interface {
 
 	// Queue a message, return a token or message id
@@ -121,33 +121,33 @@ type QueueAdapter interface {
 	Listen(service *types.Service, opts types.Options) (<-chan *types.Response, error)
 }
 
-// FunctionAdapter -
+// FunctionAdapter is an interface defining a Serverless Functions service
 type FunctionAdapter interface {
 	Call(service *types.Service, request types.Request, opts types.Options) (*types.Response, error)
 }
 
-// AutomateAdapter -
+// AutomateAdapter is an interface defining a System Management service
 type AutomateAdapter interface {
 	Execute(service *types.Service, request types.Request, opts types.Options) (*types.Response, error)
 }
 
-// PubsubAdapter -
+// PubsubAdapter is an interface defining a PubSub Messaging service
 type PubsubAdapter interface {
 	Publish(service *types.Service, request types.Request, opts types.Options) error
 	Subscribe(service *types.Service, opts types.Options) (<-chan *types.Response, error)
 }
 
-// Locator -
+// Locator is an interface defining a Service Discovery service
 type Locator interface {
 	Discover(signature *types.Signature) (*types.Service, error)
 }
 
-// LogAdapter -
+// LogAdapter is an interface defining a Logging service
 type LogAdapter interface {
 	Log(service *types.Service, message string)
 }
 
-// TraceAdapter -
+// TraceAdapter is an interface defining a Tracing service
 type TraceAdapter interface {
 	Trace(service *types.Service)
 }
@@ -171,7 +171,7 @@ func (d *Discover) discover(signature string) (*types.Service, error) {
 	return d.Discover(sig)
 }
 
-// Request - synchronous call
+// Request makes synchronous call through the FunctionAdapter
 func (d *Discover) Request(signature string, request types.Request, opts types.Options) (*types.Response, error) {
 	service, err := d.discover(signature)
 	if err != nil {
@@ -182,7 +182,7 @@ func (d *Discover) Request(signature string, request types.Request, opts types.O
 	return d.FunctionAdapter.Call(service, request, opts)
 }
 
-// Automate - calls an infrastructure script
+// Automate calls an infrastructure script through the AutomateAdapter
 func (d *Discover) Automate(signature string, request types.Request, opts types.Options) (*types.Response, error) {
 	service, err := d.discover(signature)
 	if err != nil {
@@ -193,7 +193,7 @@ func (d *Discover) Automate(signature string, request types.Request, opts types.
 	return d.AutomateAdapter.Execute(service, request, opts)
 }
 
-// Publish - publishes an asynchronous event
+// Publish publishes an asynchronous event through the PubsubAdapter
 func (d *Discover) Publish(signature string, request types.Request, opts types.Options) error {
 	service, err := d.discover(signature)
 	if err != nil {
@@ -204,7 +204,7 @@ func (d *Discover) Publish(signature string, request types.Request, opts types.O
 	return d.PubsubAdapter.Publish(service, request, opts)
 }
 
-// Subscribe - subscribe to an event
+// Subscribe subscribes to an event through the PubsubAdapter
 // Warning, not possible with SNS
 func (d *Discover) Subscribe(signature string, opts types.Options) (<-chan *types.Response, error) {
 	service, err := d.discover(signature)
@@ -216,7 +216,7 @@ func (d *Discover) Subscribe(signature string, opts types.Options) (<-chan *type
 	return d.PubsubAdapter.Subscribe(service, opts)
 }
 
-// Queue -
+// Queue queues a request through the QueueAdapter
 func (d *Discover) Queue(signature string, request types.Request, opts types.Options) (string, error) {
 	service, err := d.discover(signature)
 	if err != nil {
@@ -227,7 +227,7 @@ func (d *Discover) Queue(signature string, request types.Request, opts types.Opt
 	return d.QueueAdapter.Queue(service, request, opts)
 }
 
-// Listen -
+// Listen creates a listener channel through the QueueAdapter
 func (d *Discover) Listen(signature string, opts types.Options) (<-chan *types.Response, error) {
 	service, err := d.discover(signature)
 	if err != nil {
@@ -250,7 +250,8 @@ func (d *Discover) trace(service *types.Service) {
 	d.TraceAdapter.Trace(service)
 }
 
-// Call - potentially not needed, as the behavioural methods say
+// Call sends a request to the proper adapter depending on the service type.
+// (potentially not needed, as the behavioural methods say)
 func (d *Discover) Call(service types.ServiceRequest, opts types.Options) (*types.Response, error) {
 	switch service.Service.Type {
 	case "function", "lambda":
