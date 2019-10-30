@@ -19,8 +19,14 @@ func NewSNSAdapter(client *sns.SNS) *SNSAdapter {
 	return &SNSAdapter{client}
 }
 
+
 // Publish publishes an event to a queue
-func (sa *SNSAdapter) Publish(service *types.Service, request types.Request, opts types.Options) error {
+func (sa *SNSAdapter) Publish(service *types.Service, request types.Request) error {
+	return sa.PublishWithOpts(service, request, types.Options{})
+}
+
+// PublishWithOpts -
+func (sa *SNSAdapter) PublishWithOpts(service *types.Service, request types.Request, opts types.Options) error {
 	input := &sns.PublishInput{
 		Message:  aws.String(string(request.Body)),
 		TopicArn: aws.String(service.Addr),
@@ -29,9 +35,17 @@ func (sa *SNSAdapter) Publish(service *types.Service, request types.Request, opt
 	return err
 }
 
+
 // Subscribe is not implemented
 // (subscriptions are at a higher, none code level for AWS,
 // so we can't subscribe through code as such)
-func (sa *SNSAdapter) Subscribe(service *types.Service, opts types.Options) (<-chan *types.Response, error) {
+func (sa *SNSAdapter) Subscribe(service *types.Service) (<-chan *types.Response, error) {
+	return sa.SubscribeWithOpts(service, types.Options{})
+}
+
+// SubscribeWithOpts is not implemented
+// (subscriptions are at a higher, none code level for AWS,
+// so we can't subscribe through code as such)
+func (sa *SNSAdapter) SubscribeWithOpts(service *types.Service, opts types.Options) (<-chan *types.Response, error) {
 	return nil, errors.New("not valid for SNS")
 }

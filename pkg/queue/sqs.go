@@ -17,8 +17,14 @@ func NewSQSAdapter(client *sqs.SQS) *SQSAdapter {
 	return &SQSAdapter{client}
 }
 
+
 // Queue queues a message
-func (qa *SQSAdapter) Queue(service *types.Service, request types.Request, opts types.Options) (string, error) {
+func (qa *SQSAdapter) Queue(service *types.Service, request types.Request) (string, error) {
+	return qa.QueueWithOpts(service, request, types.Options{})
+}
+
+// QueueWithOpts queues a message, with options.
+func (qa *SQSAdapter) QueueWithOpts(service *types.Service, request types.Request, opts types.Options) (string, error) {
 	input := &sqs.SendMessageInput{
 		MessageBody: aws.String(string(request.Body)),
 		QueueUrl:    aws.String(service.Addr),
@@ -27,8 +33,14 @@ func (qa *SQSAdapter) Queue(service *types.Service, request types.Request, opts 
 	return *output.MessageId, err
 }
 
+
 // Listen listens for messages
-func (qa *SQSAdapter) Listen(service *types.Service, opts types.Options) (<-chan *types.Response, error) {
+func (qa *SQSAdapter) Listen(service *types.Service) (<-chan *types.Response, error) {
+	return qa.ListenWithOpts(service, types.Options{})
+}
+
+// ListenWithOpts listens for messages, with options
+func (qa *SQSAdapter) ListenWithOpts(service *types.Service, opts types.Options) (<-chan *types.Response, error) {
 	rchan := make(chan *types.Response)
 	input := &sqs.ReceiveMessageInput{
 		QueueUrl: aws.String(service.Addr),
