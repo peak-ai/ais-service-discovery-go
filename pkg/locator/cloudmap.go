@@ -7,17 +7,17 @@ import (
 	"github.com/peak-ai/ais-service-discovery-go/pkg/types"
 )
 
-// CloudmapLocator -
+// CloudmapLocator is an implementation of the Locator using AWS CloudMap
 type CloudmapLocator struct {
 	client *servicediscovery.ServiceDiscovery
 }
 
-// NewCloudmapLocator -
+// NewCloudmapLocator creates a new instance of CloudmapLocator
 func NewCloudmapLocator(client *servicediscovery.ServiceDiscovery) *CloudmapLocator {
 	return &CloudmapLocator{client}
 }
 
-// Discover a service
+// Discover searches for a service
 func (l *CloudmapLocator) Discover(service *types.Signature) (*types.Service, error) {
 	input := &servicediscovery.DiscoverInstancesInput{
 		NamespaceName: aws.String(service.Namespace),

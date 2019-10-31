@@ -5,9 +5,9 @@ import (
 	"strings"
 )
 
-// ParseAddr -
-// @todo - this is fairly crude, could be improved.
+// ParseAddr parse a string into a Signature
 func ParseAddr(signature string) (*types.Signature, error) {
+	// @todo - this is fairly crude, could be improved.
 	namespace := ""
 	service := ""
 	instance := ""
