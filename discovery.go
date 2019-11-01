@@ -33,7 +33,7 @@ type Options struct {
 	TraceAdapter
 }
 
-// Option -
+// Option is a function that modifies the Options object
 type Option func(*Options)
 
 // SetQueue sets the given queue adapter to be used
@@ -118,41 +118,41 @@ func NewDiscovery(opts ...Option) *Discover {
 	}
 }
 
-// QueueAdapter -
+// QueueAdapter is an interface defining a Queue service
 type QueueAdapter interface {
 
 	// Queue a message, return a token or message id
-	Queue(service *types.Service, request types.Request, opts types.Options) (string, error)
-	Listen(service *types.Service, opts types.Options) (<-chan *types.Response, error)
+	QueueWithOpts(service *types.Service, request types.Request, opts types.Options) (string, error)
+	ListenWithOpts(service *types.Service, opts types.Options) (<-chan *types.Response, error)
 }
 
-// FunctionAdapter -
+// FunctionAdapter is an interface defining a Serverless Functions service
 type FunctionAdapter interface {
-	Call(service *types.Service, request types.Request, opts types.Options) (*types.Response, error)
+	CallWithOpts(service *types.Service, request types.Request, opts types.Options) (*types.Response, error)
 }
 
-// AutomateAdapter -
+// AutomateAdapter is an interface defining a System Management service
 type AutomateAdapter interface {
-	Execute(service *types.Service, request types.Request, opts types.Options) (*types.Response, error)
+	ExecuteWithOpts(service *types.Service, request types.Request, opts types.Options) (*types.Response, error)
 }
 
-// PubsubAdapter -
+// PubsubAdapter is an interface defining a PubSub Messaging service
 type PubsubAdapter interface {
-	Publish(service *types.Service, request types.Request, opts types.Options) error
-	Subscribe(service *types.Service, opts types.Options) (<-chan *types.Response, error)
+	PublishWithOpts(service *types.Service, request types.Request, opts types.Options) error
+	SubscribeWithOpts(service *types.Service, opts types.Options) (<-chan *types.Response, error)
 }
 
-// Locator -
+// Locator is an interface defining a Service Discovery service
 type Locator interface {
 	Discover(signature *types.Signature) (*types.Service, error)
 }
 
-// LogAdapter -
+// LogAdapter is an interface defining a Logging service
 type LogAdapter interface {
 	Log(service *types.Service, message string)
 }
 
-// TraceAdapter -
+// TraceAdapter is an interface defining a Tracing service
 type TraceAdapter interface {
 	Trace(service *types.Service)
 }
@@ -176,71 +176,105 @@ func (d *Discover) discover(signature string) (*types.Service, error) {
 	return d.Discover(sig)
 }
 
-// Request - synchronous call
-func (d *Discover) Request(signature string, request types.Request, opts types.Options) (*types.Response, error) {
+
+// Request makes synchronous call through the FunctionAdapter
+func (d *Discover) Request(signature string, request types.Request) (*types.Response, error) {
+	return d.RequestWithOpts(signature, request, types.Options{})
+}
+
+// RequestWithOpts makes synchronous call through the FunctionAdapter, with options
+func (d *Discover) RequestWithOpts(signature string, request types.Request, opts types.Options) (*types.Response, error) {
 	service, err := d.discover(signature)
 	if err != nil {
 		return nil, err
 	}
 	defer d.log(service, fmt.Sprintf("making a request to: %s", signature))
 	defer d.trace(service)
-	return d.FunctionAdapter.Call(service, request, opts)
+	return d.FunctionAdapter.CallWithOpts(service, request, opts)
 }
 
-// Automate - calls an infrastructure script
-func (d *Discover) Automate(signature string, request types.Request, opts types.Options) (*types.Response, error) {
+
+// Automate calls an infrastructure script through the AutomateAdapter
+func (d *Discover) Automate(signature string, request types.Request) (*types.Response, error) {
+	return d.AutomateWithOpts(signature, request, types.Options{})
+}
+
+// AutomateWithOpts calls an infrastructure script through the AutomateAdapter, with options
+func (d *Discover) AutomateWithOpts(signature string, request types.Request, opts types.Options) (*types.Response, error) {
 	service, err := d.discover(signature)
 	if err != nil {
 		return nil, err
 	}
 	defer d.log(service, fmt.Sprintf("running automation: %s", signature))
 	defer d.trace(service)
-	return d.AutomateAdapter.Execute(service, request, opts)
+	return d.AutomateAdapter.ExecuteWithOpts(service, request, opts)
 }
 
-// Publish - publishes an asynchronous event
-func (d *Discover) Publish(signature string, request types.Request, opts types.Options) error {
+
+// Publish publishes an asynchronous event through the PubsubAdapter
+func (d *Discover) Publish(signature string, request types.Request) error {
+	return d.PublishWithOpts(signature, request, types.Options{})
+}
+
+// PublishWithOpts - publishes an asynchronous event through the PubsubAdapter, with options
+func (d *Discover) PublishWithOpts(signature string, request types.Request, opts types.Options) error {
 	service, err := d.discover(signature)
 	if err != nil {
 		return err
 	}
 	defer d.log(service, fmt.Sprintf("publishing event to: %s", signature))
 	defer d.trace(service)
-	return d.PubsubAdapter.Publish(service, request, opts)
+	return d.PubsubAdapter.PublishWithOpts(service, request, opts)
 }
 
-// Subscribe - subscribe to an event
+// Subscribe subscribes to an event through the PubsubAdapter
 // Warning, not possible with SNS
-func (d *Discover) Subscribe(signature string, opts types.Options) (<-chan *types.Response, error) {
+func (d *Discover) Subscribe(signature string) (<-chan *types.Response, error) {
+	return d.SubscribeWithOpts(signature, types.Options{})
+}
+
+// SubscribeWithOpts subscribes to an event through the PubsubAdapter, with options
+// Warning, not possible with SNS
+func (d *Discover) SubscribeWithOpts(signature string, opts types.Options) (<-chan *types.Response, error) {
 	service, err := d.discover(signature)
 	if err != nil {
 		return nil, err
 	}
 	defer d.log(service, fmt.Sprintf("subscribed to: %s", signature))
 	defer d.trace(service)
-	return d.PubsubAdapter.Subscribe(service, opts)
+	return d.PubsubAdapter.SubscribeWithOpts(service, opts)
 }
 
-// Queue -
-func (d *Discover) Queue(signature string, request types.Request, opts types.Options) (string, error) {
+// Queue queues a request through the QueueAdapter
+func (d *Discover) Queue(signature string, request types.Request) (string, error) {
+	return d.QueueWithOpts(signature, request, types.Options{})
+}
+
+// QueueWithOpts queues a request through the QueueAdapter, with options
+func (d *Discover) QueueWithOpts(signature string, request types.Request, opts types.Options) (string, error) {
 	service, err := d.discover(signature)
 	if err != nil {
 		return "", err
 	}
 	defer d.log(service, fmt.Sprintf("queued message to: %s", signature))
 	defer d.trace(service)
-	return d.QueueAdapter.Queue(service, request, opts)
+	return d.QueueAdapter.QueueWithOpts(service, request, opts)
 }
 
-// Listen -
-func (d *Discover) Listen(signature string, opts types.Options) (<-chan *types.Response, error) {
+// Listen creates a listener channel through the QueueAdapter
+func (d *Discover) Listen(signature string) (<-chan *types.Response, error) {
+	return d.ListenWithOpts(signature, types.Options{})
+}
+
+// ListenWithOpts creates a listener channel through the QueueAdapter, with options
+func (d *Discover) ListenWithOpts(signature string, opts types.Options) (<-chan *types.Response, error) {
 	service, err := d.discover(signature)
 	if err != nil {
 		return nil, err
 	}
 	defer d.log(service, fmt.Sprintf("listening to: %s", signature))
 	defer d.trace(service)
-	return d.QueueAdapter.Listen(service, opts)
+	return d.QueueAdapter.ListenWithOpts(service, opts)
 }
 
 // Logs the call that's made, using the given
@@ -255,22 +289,30 @@ func (d *Discover) trace(service *types.Service) {
 	d.TraceAdapter.Trace(service)
 }
 
-// Call - potentially not needed, as the behavioural methods say
+// Call sends a request to the proper adapter depending on the service type.
+// (potentially not needed, as the behavioural methods say)
 func (d *Discover) Call(service types.ServiceRequest, opts types.Options) (*types.Response, error) {
+	return d.CallWithOpts(service, types.Options{})
+}
+
+// CallWithOpts sends a request to the proper adapter depending on the service
+// type, with options.
+// (potentially not needed, as the behavioural methods say)
+func (d *Discover) CallWithOpts(service types.ServiceRequest, opts types.Options) (*types.Response, error) {
 	switch service.Service.Type {
 	case "function", "lambda":
-		return d.FunctionAdapter.Call(service.Service, service.Request, opts)
+		return d.FunctionAdapter.CallWithOpts(service.Service, service.Request, opts)
 	case "event", "pubsub":
-		return &types.Response{}, d.PubsubAdapter.Publish(service.Service, service.Request, opts)
+		return &types.Response{}, d.PubsubAdapter.PublishWithOpts(service.Service, service.Request, opts)
 	case "queue", "sqs":
-		token, err := d.QueueAdapter.Queue(service.Service, service.Request, opts)
+		token, err := d.QueueAdapter.QueueWithOpts(service.Service, service.Request, opts)
 		return &types.Response{
 			Body: []byte(token),
 		}, err
 	case "script", "ssm", "automation":
-		return d.AutomateAdapter.Execute(service.Service, service.Request, opts)
+		return d.AutomateAdapter.ExecuteWithOpts(service.Service, service.Request, opts)
 	default:
 		// @todo - potentially dangerous default option?
-		return d.FunctionAdapter.Call(service.Service, service.Request, opts)
+		return d.FunctionAdapter.CallWithOpts(service.Service, service.Request, opts)
 	}
 }

@@ -45,7 +45,7 @@ func main() {
 
   token, err := d.Queue("acme-prod.my-service->my-queue", types.Request{
     Body: []byte("{}"),
-  }, nil)
+  })
   ...
 }
 ```
@@ -69,7 +69,7 @@ func main() {
 d := discover.NewDiscovery()
 d.Request("my-namespace.users->create-user", types.Request{
   Body: []byte("{ \"hello\": \"world\" }"),
-}, opts)
+})
 ```
 
 ### Queue
@@ -78,10 +78,10 @@ d.Request("my-namespace.users->create-user", types.Request{
 d := discover.NewDiscovery()
 d.Queue("my-namespace.my-service->my-queue", types.Request{
   Body: jsonString,
-}, nil)
+})
 
 go func() {
-  messages, err := d.Listen("my-namespace.my-service->my-queue", opts)
+  messages, err := d.Listen("my-namespace.my-service->my-queue")
   for message := range message {
     log.Println(string(message.Body))
   }
@@ -123,8 +123,8 @@ Discover(signature *types.Signature) (*types.Service, error)
 type QueueAdapter interface {
 
 	// Queue a message, return a token or message id
-	Queue(service *types.Service, request types.Request, opts types.Options) (string, error)
-	Listen(service *types.Service, opts types.Options) (<-chan *types.Response, error)
+	QueueWithOpts(service *types.Service, request types.Request, opts types.Options) (string, error)
+	ListenWithOpts(service *types.Service, opts types.Options) (<-chan *types.Response, error)
 }
 ```
 
@@ -133,7 +133,7 @@ type QueueAdapter interface {
 ```golang
 // FunctionAdapter -
 type FunctionAdapter interface {
-	Call(service *types.Service, request types.Request, opts types.Options) (*types.Response, error)
+	CallWithOpts(service *types.Service, request types.Request, opts types.Options) (*types.Response, error)
 }
 ```
 
@@ -142,7 +142,7 @@ type FunctionAdapter interface {
 ```golang
 // AutomateAdapter -
 type AutomateAdapter interface {
-	Execute(service *types.Service, request types.Request, opts types.Options) (*types.Response, error)
+	ExecuteWithOpts(service *types.Service, request types.Request, opts types.Options) (*types.Response, error)
 }
 ```
 
@@ -151,8 +151,8 @@ type AutomateAdapter interface {
 ```golang
 // PubsubAdapter -
 type PubsubAdapter interface {
-	Publish(service *types.Service, request types.Request, opts types.Options) error
-	Subscribe(service *types.Service, opts types.Options) (<-chan *types.Response, error)
+	PublishWithOpts(service *types.Service, request types.Request, opts types.Options) error
+	SubscribeWithOpts(service *types.Service, opts types.Options) (<-chan *types.Response, error)
 }
 ```
 

@@ -9,19 +9,25 @@ import (
 	"github.com/aws/aws-sdk-go/service/ssm"
 )
 
-// SSMAdapter -
+// SSMAdapter is a AutomateAdapter for AWS, using the Systems Manager service
 type SSMAdapter struct {
 	client *ssm.SSM
 }
 
-// NewSSMAdapter -
+// NewSSMAdapter creates a new instance of the SSMAdapter
 func NewSSMAdapter(client *ssm.SSM) *SSMAdapter {
 	return &SSMAdapter{client}
 }
 
-// Execute - executes an SSM document, with arguments and returns the execution ID
+// Execute executes an SSM document, with arguments and returns the execution ID
 // as the response body.
-func (sa *SSMAdapter) Execute(service *types.Service, request types.Request, opts types.Options) (*types.Response, error) {
+func (sa *SSMAdapter) Execute(service *types.Service, request types.Request) (*types.Response, error) {
+	return sa.ExecuteWithOpts(service, request, types.Options{})
+}
+
+// ExecuteWithOpts - executes an SSM document, with arguments and options.  Returns the execution ID
+// as the response body.
+func (sa *SSMAdapter) ExecuteWithOpts(service *types.Service, request types.Request, opts types.Options) (*types.Response, error) {
 	var args map[string][]*string
 	if err := json.Unmarshal(request.Body, &args); err != nil {
 		return nil, err

@@ -14,15 +14,15 @@ func init() {
 	log.SetLevel(log.InfoLevel)
 }
 
-// STDOutLogger - logs formatted logs to std out.
+// STDOutLogger logs formatted logs to std out.
 type STDOutLogger struct{}
 
-// NewSTDOutAdapter -
+// NewSTDOutAdapter creates a new instance of the STDOutAdapter
 func NewSTDOutAdapter() *STDOutLogger {
 	return &STDOutLogger{}
 }
 
-// Log -
+// Log writes to std out
 func (so *STDOutLogger) Log(service *types.Service, message string) {
 	log.WithFields(log.Fields{
 		"service":  service.Name,

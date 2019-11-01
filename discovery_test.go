@@ -16,7 +16,7 @@ func (l *mockLocator) Discover(service *types.Signature) (*types.Service, error)
 
 type mockFunctionAdapter struct{}
 
-func (fa *mockFunctionAdapter) Call(
+func (fa *mockFunctionAdapter) CallWithOpts(
 	service *types.Service,
 	request types.Request,
 	opts types.Options,
@@ -28,7 +28,7 @@ type mockQueueAdapter struct {
 	messages chan *types.Response
 }
 
-func (qa *mockQueueAdapter) Queue(
+func (qa *mockQueueAdapter) QueueWithOpts(
 	service *types.Service,
 	request types.Request,
 	opts types.Options,
@@ -40,7 +40,7 @@ func (qa *mockQueueAdapter) Queue(
 	return "abc123", nil
 }
 
-func (qa *mockQueueAdapter) Listen(
+func (qa *mockQueueAdapter) ListenWithOpts(
 	service *types.Service,
 	options types.Options,
 ) (<-chan *types.Response, error) {
@@ -49,7 +49,7 @@ func (qa *mockQueueAdapter) Listen(
 
 type mockAutomateAdapter struct{}
 
-func (aa *mockAutomateAdapter) Execute(
+func (aa *mockAutomateAdapter) ExecuteWithOpts(
 	service *types.Service,
 	request types.Request,
 	opts types.Options,
@@ -59,7 +59,7 @@ func (aa *mockAutomateAdapter) Execute(
 
 type mockPubsubAdapter struct{}
 
-func (pa *mockPubsubAdapter) Publish(
+func (pa *mockPubsubAdapter) PublishWithOpts(
 	service *types.Service,
 	request types.Request,
 	opts types.Options,
@@ -67,7 +67,7 @@ func (pa *mockPubsubAdapter) Publish(
 	return nil
 }
 
-func (pa *mockPubsubAdapter) Subscribe(
+func (pa *mockPubsubAdapter) SubscribeWithOpts(
 	service *types.Service,
 	opts types.Options,
 ) (<-chan *types.Response, error) {
@@ -93,7 +93,7 @@ func TestCanCallRequest(t *testing.T) {
 	)
 	discover.Request("service->handler", types.Request{
 		Body: []byte(""),
-	}, nil)
+	})
 }
 
 func TestCanCallAutomate(t *testing.T) {
@@ -105,7 +105,7 @@ func TestCanCallAutomate(t *testing.T) {
 	)
 	_, err := discover.Automate("service->handler", types.Request{
 		Body: []byte(""),
-	}, nil)
+	})
 	assert.NoError(t, err)
 }
 
@@ -118,7 +118,7 @@ func TestCanCallPubSub(t *testing.T) {
 	)
 	err := discover.Publish("my-service->my-topic", types.Request{
 		Body: []byte(""),
-	}, nil)
+	})
 	assert.NoError(t, err)
 }
 
@@ -137,11 +137,11 @@ func TestCanCallQueue(t *testing.T) {
 	)
 	token, err := discover.Queue("my-service->my-queue", types.Request{
 		Body: val,
-	}, nil)
+	})
 	assert.NoError(t, err)
 	assert.Equal(t, token, "abc123")
 
-	messages, err := discover.Listen("my-service->my-queue", nil)
+	messages, err := discover.Listen("my-service->my-queue")
 	log.Println(messages)
 	assert.NoError(t, err)
 	assert.Equal(t, <-messages, response)
