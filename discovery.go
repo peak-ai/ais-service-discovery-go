@@ -97,6 +97,19 @@ func WithAWSBackend() Option {
 		args.Locator = locator.NewCloudmapLocator(servicediscovery.New(sess))
 		args.LogAdapter = logger.NewSTDOutAdapter()
 		args.TraceAdapter = tracer.NewXrayAdapter()
+}
+
+// NewDiscovery creates a new Discover object to communicate with the various services
+func NewDiscovery(opts ...Option) *Discover {
+	sess := session.Must(session.NewSession())
+	args := &Options{
+		QueueAdapter:    queue.NewSQSAdapter(sqs.New(sess)),
+		FunctionAdapter: function.NewLambdaAdapter(lambda.New(sess)),
+		AutomateAdapter: automate.NewSSMAdapter(ssm.New(sess)),
+		PubsubAdapter:   pubsub.NewSNSAdapter(sns.New(sess)),
+		Locator:         locator.NewCloudmapLocator(servicediscovery.New(sess)),
+		LogAdapter:      logger.NewSTDOutAdapter(),
+		TraceAdapter:    tracer.NewXrayAdapter(),
 	}
 }
 
@@ -176,7 +189,6 @@ func (d *Discover) discover(signature string) (*types.Service, error) {
 	return d.Discover(sig)
 }
 
-
 // Request makes synchronous call through the FunctionAdapter
 func (d *Discover) Request(signature string, request types.Request) (*types.Response, error) {
 	return d.RequestWithOpts(signature, request, types.Options{})
@@ -193,7 +205,6 @@ func (d *Discover) RequestWithOpts(signature string, request types.Request, opts
 	return d.FunctionAdapter.CallWithOpts(service, request, opts)
 }
 
-
 // Automate calls an infrastructure script through the AutomateAdapter
 func (d *Discover) Automate(signature string, request types.Request) (*types.Response, error) {
 	return d.AutomateWithOpts(signature, request, types.Options{})
@@ -209,7 +220,6 @@ func (d *Discover) AutomateWithOpts(signature string, request types.Request, opt
 	defer d.trace(service)
 	return d.AutomateAdapter.ExecuteWithOpts(service, request, opts)
 }
-
 
 // Publish publishes an asynchronous event through the PubsubAdapter
 func (d *Discover) Publish(signature string, request types.Request) error {

@@ -17,7 +17,6 @@ func NewLambdaAdapter(client *lambda.Lambda) *LambdaAdapter {
 	return &LambdaAdapter{client}
 }
 
-
 // Call exeutes a lambda function
 func (la *LambdaAdapter) Call(service *types.Service, request types.Request) (*types.Response, error) {
 	return la.CallWithOpts(service, request, types.Options{})

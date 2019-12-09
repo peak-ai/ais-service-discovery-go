@@ -19,7 +19,6 @@ func NewSNSAdapter(client *sns.SNS) *SNSAdapter {
 	return &SNSAdapter{client}
 }
 
-
 // Publish publishes an event to a queue
 func (sa *SNSAdapter) Publish(service *types.Service, request types.Request) error {
 	return sa.PublishWithOpts(service, request, types.Options{})
@@ -34,7 +33,6 @@ func (sa *SNSAdapter) PublishWithOpts(service *types.Service, request types.Requ
 	_, err := sa.client.Publish(input)
 	return err
 }
-
 
 // Subscribe is not implemented
 // (subscriptions are at a higher, none code level for AWS,

@@ -17,7 +17,6 @@ func NewSQSAdapter(client *sqs.SQS) *SQSAdapter {
 	return &SQSAdapter{client}
 }
 
-
 // Queue queues a message
 func (qa *SQSAdapter) Queue(service *types.Service, request types.Request) (string, error) {
 	return qa.QueueWithOpts(service, request, types.Options{})
@@ -32,7 +31,6 @@ func (qa *SQSAdapter) QueueWithOpts(service *types.Service, request types.Reques
 	output, err := qa.client.SendMessage(input)
 	return *output.MessageId, err
 }
-
 
 // Listen listens for messages
 func (qa *SQSAdapter) Listen(service *types.Service) (<-chan *types.Response, error) {
