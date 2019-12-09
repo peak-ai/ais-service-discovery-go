@@ -97,19 +97,6 @@ func WithAWSBackend() Option {
 		args.Locator = locator.NewCloudmapLocator(servicediscovery.New(sess))
 		args.LogAdapter = logger.NewSTDOutAdapter()
 		args.TraceAdapter = tracer.NewXrayAdapter()
-}
-
-// NewDiscovery creates a new Discover object to communicate with the various services
-func NewDiscovery(opts ...Option) *Discover {
-	sess := session.Must(session.NewSession())
-	args := &Options{
-		QueueAdapter:    queue.NewSQSAdapter(sqs.New(sess)),
-		FunctionAdapter: function.NewLambdaAdapter(lambda.New(sess)),
-		AutomateAdapter: automate.NewSSMAdapter(ssm.New(sess)),
-		PubsubAdapter:   pubsub.NewSNSAdapter(sns.New(sess)),
-		Locator:         locator.NewCloudmapLocator(servicediscovery.New(sess)),
-		LogAdapter:      logger.NewSTDOutAdapter(),
-		TraceAdapter:    tracer.NewXrayAdapter(),
 	}
 }
 
