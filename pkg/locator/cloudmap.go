@@ -39,8 +39,13 @@ func (l *CloudmapLocator) Discover(service *types.Signature) (*types.Service, er
 
 
 	// @todo - 'arn' is AWS specific, consider a more
-	// generalisd term for this concept
+	// generalised term for this concept
+	// also, sometimes people use 'arn' other cases url 'url'.
 	location := *instance.Attributes["arn"]
+	if location == "" {
+		location = *instance.Attributes["url"]
+	}
+
 	t := *instance.Attributes["type"]
 
 	return &types.Service{
