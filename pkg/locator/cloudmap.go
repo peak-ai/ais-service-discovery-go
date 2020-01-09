@@ -1,6 +1,7 @@
 package locator
 
 import (
+	"errors"
 	aws "github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/servicediscovery"
 
@@ -44,6 +45,10 @@ func (l *CloudmapLocator) Discover(service *types.Signature) (*types.Service, er
 	location := *instance.Attributes["arn"]
 	if location == "" {
 		location = *instance.Attributes["url"]
+	}
+
+	if location == "" {
+		return nil, errors.New("cannot find a url or arn associated with this service")
 	}
 
 	t := *instance.Attributes["type"]
