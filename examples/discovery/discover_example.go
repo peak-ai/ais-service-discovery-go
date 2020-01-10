@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/peak-ai/ais-service-discovery-go/pkg/parser"
 	"log"
 
 	d "github.com/peak-ai/ais-service-discovery-go"
@@ -9,8 +8,7 @@ import (
 
 func main() {
 	discovery := d.NewDiscovery(d.WithAWSBackend())
-	signature, err := parser.ParseAddr("acme-prod.my-service->queue")
-	res, err := discovery.Discover(signature)
+	res, err := discovery.Discover("acme-latest.generator->queue")
 	if err != nil {
 		log.Panic(err)
 	}

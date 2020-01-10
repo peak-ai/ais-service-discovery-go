@@ -173,7 +173,11 @@ func (d *Discover) discover(signature string) (*types.Service, error) {
 	if err != nil {
 		return nil, err
 	}
-	return d.Discover(sig)
+	return d.Locator.Discover(sig)
+}
+
+func (d *Discover) Discover(addr string) (*types.Service, error) {
+	return d.discover(addr)
 }
 
 // Request makes synchronous call through the FunctionAdapter
