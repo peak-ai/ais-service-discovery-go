@@ -33,11 +33,14 @@ func (l *CloudmapLocator) Discover(service *types.Signature) (*types.Service, er
 	var instance *servicediscovery.HttpInstanceSummary
 	instances := instanceOutput.Instances
 	for _, i := range instances {
-		if i.InstanceId == aws.String(service.Instance) {
+		if *i.InstanceId == service.Instance {
 			instance = i
 		}
 	}
 
+	if instance == nil {
+		return nil, errors.New("cannot find the given instance associated with this service")
+	}
 
 	// @todo - 'arn' is AWS specific, consider a more
 	// generalised term for this concept
