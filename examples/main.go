@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	discovery := d.NewDiscovery()
+	discovery := d.NewDiscovery(d.WithAWSBackend())
 	res, err := discovery.Request("acme-prod.scheduler->create-job", types.Request{
 		Body: []byte(`{ "frequency": "* * * * *", "type": "test" }`),
 	})

@@ -19,17 +19,35 @@ func NewSNSAdapter(client *sns.SNS) *SNSAdapter {
 	return &SNSAdapter{client}
 }
 
+func (sa *SNSAdapter) parseOpts(opts types.Options) map[string]*sns.MessageAttributeValue {
+	atts := make(map[string]*sns.MessageAttributeValue, 0)
+	for key, val := range opts {
+		attributeValue, ok := val.(*sns.MessageAttributeValue)
+		if ok {
+			atts[key] = attributeValue
+		}
+	}
+
+	return atts
+}
+
 // Publish publishes an event to a queue
 func (sa *SNSAdapter) Publish(service *types.Service, request types.Request) error {
 	return sa.PublishWithOpts(service, request, types.Options{})
 }
 
-// PublishWithOpts -
+// PublishWithOpts takes the generic options type, converts to 'MessageAttributes'
 func (sa *SNSAdapter) PublishWithOpts(service *types.Service, request types.Request, opts types.Options) error {
 	input := &sns.PublishInput{
 		Message:  aws.String(string(request.Body)),
 		TopicArn: aws.String(service.Addr),
 	}
+	
+	if len(opts) > 0 {
+		atts := sa.parseOpts(opts)
+		input.SetMessageAttributes(atts)
+	}
+
 	_, err := sa.client.Publish(input)
 	return err
 }

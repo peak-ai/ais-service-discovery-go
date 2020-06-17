@@ -22,12 +22,30 @@ func (qa *SQSAdapter) Queue(service *types.Service, request types.Request) (stri
 	return qa.QueueWithOpts(service, request, types.Options{})
 }
 
+func (qa *SQSAdapter) parseOpts(opts types.Options) map[string]*sqs.MessageAttributeValue {
+	atts := make(map[string]*sqs.MessageAttributeValue, 0)
+	for key, val := range opts {
+		attributeValue, ok := val.(*sqs.MessageAttributeValue)
+		if ok {
+			atts[key] = attributeValue
+		}
+	}
+
+	return atts
+}
+
 // QueueWithOpts queues a message, with options.
 func (qa *SQSAdapter) QueueWithOpts(service *types.Service, request types.Request, opts types.Options) (string, error) {
 	input := &sqs.SendMessageInput{
 		MessageBody: aws.String(string(request.Body)),
 		QueueUrl:    aws.String(service.Addr),
 	}
+
+	if len(opts) > 0 {
+		atts := qa.parseOpts(opts)
+		input.SetMessageAttributes(atts)
+	}
+
 	output, err := qa.client.SendMessage(input)
 	return *output.MessageId, err
 }
@@ -43,6 +61,16 @@ func (qa *SQSAdapter) ListenWithOpts(service *types.Service, opts types.Options)
 	input := &sqs.ReceiveMessageInput{
 		QueueUrl: aws.String(service.Addr),
 	}
+
+	// Options here are for keys only, so the format doesn't quite work here...
+	if len(opts) > 0 {
+		var keys []*string
+		for key, _ := range opts {
+			keys = append(keys, aws.String(key))
+		}
+		input.SetMessageAttributeNames(keys)
+	}
+
 	go func() {
 		for {
 			res, err := qa.client.ReceiveMessage(input)
