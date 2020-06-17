@@ -22,7 +22,9 @@ func NewSNSAdapter(client *sns.SNS) *SNSAdapter {
 func (sa *SNSAdapter) parseOpts(opts types.Options) map[string]*sns.MessageAttributeValue {
 	atts := make(map[string]*sns.MessageAttributeValue, 0)
 	for key, val := range opts {
-		atts[key] = &sns.MessageAttributeValue{
+		if attributeValue, ok := val.(*sns.MessageAttributeValue) {
+			atts[key] = attributeValue
+		}
 			StringValue: aws.String(val.(string)),
 		}
 	}
