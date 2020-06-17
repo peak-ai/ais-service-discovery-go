@@ -25,7 +25,10 @@ func (qa *SQSAdapter) Queue(service *types.Service, request types.Request) (stri
 func (qa *SQSAdapter) parseOpts(opts types.Options) map[string]*sqs.MessageAttributeValue {
 	atts := make(map[string]*sqs.MessageAttributeValue, 0)
 	for key, val := range opts {
-		atts[key] = &sqs.MessageAttributeValue{
+		if attributeValue, ok := val.(*sqs.MessageAttributeValue) {
+			atts[key] = attributeValue
+		}
+``
 			StringValue: aws.String(val.(string)),
 		}
 	}
