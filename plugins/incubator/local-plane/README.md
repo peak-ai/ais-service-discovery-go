@@ -97,3 +97,6 @@ func main() {
 - [ ] - Create adapters for events
 - [ ] - Better tests
 - [ ] - Error simulation scenarios
+
+Other ideas:
+- local config file perhaps, json or hcl, such as .local-plane, or .service-discovery, which contains some environment based config.
