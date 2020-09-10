@@ -3,8 +3,8 @@ package tracer
 import (
 	"context"
 
-	"github.com/peak-ai/ais-service-discovery-go/pkg/types"
 	"github.com/aws/aws-xray-sdk-go/xray"
+	"github.com/peak-ai/ais-service-discovery-go/pkg/types"
 )
 
 // XrayTracer is an implementation of a TraceAdapter using AWS Xray

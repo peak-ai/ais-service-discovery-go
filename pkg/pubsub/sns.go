@@ -42,7 +42,7 @@ func (sa *SNSAdapter) PublishWithOpts(service *types.Service, request types.Requ
 		Message:  aws.String(string(request.Body)),
 		TopicArn: aws.String(service.Addr),
 	}
-	
+
 	if len(opts) > 0 {
 		atts := sa.parseOpts(opts)
 		input.SetMessageAttributes(atts)
