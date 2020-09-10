@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	config "github.com/peak-ai/local-plane/config"
+	config "github.com/peak-ai/ais-service-discovery-go/plugins/incubator/local-plane/config"
 	mock "github.com/stretchr/testify/mock"
 
 	types "github.com/peak-ai/ais-service-discovery-go/pkg/types"

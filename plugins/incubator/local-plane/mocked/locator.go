@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/peak-ai/ais-service-discovery-go/pkg/types"
-	"github.com/peak-ai/local-plane/config"
+	"github.com/peak-ai/ais-service-discovery-go/plugins/incubator/local-plane/config"
 )
 
 // NewLocator -

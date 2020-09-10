@@ -5,10 +5,10 @@ import (
 
 	discovery "github.com/peak-ai/ais-service-discovery-go"
 	"github.com/peak-ai/ais-service-discovery-go/pkg/types"
-	"github.com/peak-ai/local-plane/config"
-	"github.com/peak-ai/local-plane/mocked"
-	"github.com/peak-ai/local-plane/redirected"
-	"github.com/peak-ai/local-plane/resolvers"
+	"github.com/peak-ai/ais-service-discovery-go/plugins/incubator/local-plane/config"
+	"github.com/peak-ai/ais-service-discovery-go/plugins/incubator/local-plane/mocked"
+	"github.com/peak-ai/ais-service-discovery-go/plugins/incubator/local-plane/redirected"
+	"github.com/peak-ai/ais-service-discovery-go/plugins/incubator/local-plane/resolvers"
 	"go.uber.org/zap"
 )
 

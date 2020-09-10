@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/peak-ai/ais-service-discovery-go/pkg/types"
-	"github.com/peak-ai/local-plane/config"
-	"github.com/peak-ai/local-plane/redirected/mocks"
+	"github.com/peak-ai/ais-service-discovery-go/plugins/incubator/local-plane/config"
+	"github.com/peak-ai/ais-service-discovery-go/plugins/incubator/local-plane/redirected/mocks"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
@@ -16,9 +16,8 @@ func TestCanQueue(t *testing.T) {
 		Body: []byte("test"),
 	}
 	resolver := &mocks.Resolver{}
-	resolver.On("Resolver", mock.AnythingOfType("config.Resolver")).
-		Once().
-		Return(response)
+	resolver.On("Resolve", mock.AnythingOfType("config.Resolver")).
+		Return(response, nil)
 
 	c := config.Config{
 		"latest.test->service": config.Service{
