@@ -4,8 +4,6 @@ Service Discovery is built on top of a plug-in architecture. You can simply sati
 
 This package contains two sub-packages:
 
-1. Core
-
 
 ## Core
 Core contains plugins that are used in the wild and are considered stable.
