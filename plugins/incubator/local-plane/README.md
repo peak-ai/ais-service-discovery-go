@@ -15,8 +15,8 @@ import (
 
 	discovery "github.com/peak-ai/ais-service-discovery-go"
 	"github.com/peak-ai/ais-service-discovery-go/pkg/types"
-	"github.com/peak-ai/local-plane/backend"
-	"github.com/peak-ai/local-plane/config"
+	"github.com/peak-ai/ais-service-discovery-go/plugins/incubator/local-plane/backend"
+	"github.com/peak-ai/ais-service-discovery-go/plugins/incubator/local-plane/config"
 )
 
 func main() {
@@ -54,12 +54,11 @@ a specific service address.
 package main
 
 import (
-	"log"
-
-	discovery "github.com/peak-ai/ais-service-discovery-go"
-	"github.com/peak-ai/ais-service-discovery-go/pkg/types"
-	"github.com/peak-ai/local-plane/backend"
-	"github.com/peak-ai/local-plane/config"
+        "log"
+        discovery "github.com/peak-ai/ais-service-discovery-go"
+        "github.com/peak-ai/ais-service-discovery-go/pkg/types"
+        "github.com/peak-ai/ais-service-discovery-go/plugins/incubator/local-plane/backend"
+        "github.com/peak-ai/ais-service-discovery-go/plugins/incubator/local-plane/config"
 )
 
 func main() {
