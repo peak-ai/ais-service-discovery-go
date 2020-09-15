@@ -46,6 +46,7 @@ func WithMockedBackend(config config.Config) discovery.Option {
 		args.LogAdapter = structuredLogger
 		args.Locator = mocked.NewLocator(config)
 		args.QueueAdapter = mocked.NewQueueAdapter(config)
+		args.FunctionAdapter = mocked.NewFunctionAdapter(config)
 	}
 }
 
