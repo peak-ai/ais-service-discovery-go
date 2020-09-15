@@ -2,10 +2,11 @@ package locator
 
 import (
 	"errors"
+
 	aws "github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/servicediscovery"
 
-	"github.com/peak-ai/ais-service-discovery-go/pkg/types"
+	"github.com/peak-ai/ais-service-discovery-go/types"
 )
 
 // CloudmapLocator is an implementation of the Locator using AWS CloudMap

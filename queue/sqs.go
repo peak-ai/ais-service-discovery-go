@@ -1,10 +1,9 @@
 package queue
 
 import (
-	"github.com/peak-ai/ais-service-discovery-go/pkg/types"
-
 	aws "github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/sqs"
+	"github.com/peak-ai/ais-service-discovery-go/types"
 )
 
 // SQSAdapter is an implementation of a QueueAdapter using AWS SQS

@@ -4,7 +4,7 @@ import (
 	"log"
 	"testing"
 
-	"github.com/peak-ai/ais-service-discovery-go/pkg/types"
+	"github.com/peak-ai/ais-service-discovery-go/types"
 	"github.com/stretchr/testify/assert"
 )
 
