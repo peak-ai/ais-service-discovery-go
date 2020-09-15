@@ -25,7 +25,7 @@ func (f *FunctionAdapter) resolve(service *types.Service) (config.Service, error
 	return srv, nil
 }
 
-// CCallWithOpts - mocks a cloud function call
+// CallWithOpts mocks a cloud function call
 func (f *FunctionAdapter) CallWithOpts(service *types.Service, request types.Request, opts types.Options) (*types.Response, error) {
 	srv, err := f.resolve(service)
 	if err != nil {
