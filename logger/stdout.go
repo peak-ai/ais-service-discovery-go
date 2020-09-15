@@ -3,7 +3,7 @@ package logger
 import (
 	"os"
 
-	"github.com/peak-ai/ais-service-discovery-go/pkg/types"
+	"github.com/peak-ai/ais-service-discovery-go/types"
 
 	log "github.com/sirupsen/logrus"
 )

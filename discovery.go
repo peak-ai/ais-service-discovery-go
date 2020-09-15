@@ -10,15 +10,15 @@ import (
 	"github.com/aws/aws-sdk-go/service/sqs"
 	"github.com/aws/aws-sdk-go/service/ssm"
 
-	"github.com/peak-ai/ais-service-discovery-go/pkg/automate"
-	"github.com/peak-ai/ais-service-discovery-go/pkg/function"
-	"github.com/peak-ai/ais-service-discovery-go/pkg/locator"
-	"github.com/peak-ai/ais-service-discovery-go/pkg/logger"
-	"github.com/peak-ai/ais-service-discovery-go/pkg/parser"
-	"github.com/peak-ai/ais-service-discovery-go/pkg/pubsub"
-	"github.com/peak-ai/ais-service-discovery-go/pkg/queue"
-	"github.com/peak-ai/ais-service-discovery-go/pkg/tracer"
-	"github.com/peak-ai/ais-service-discovery-go/pkg/types"
+	"github.com/peak-ai/ais-service-discovery-go/automate"
+	"github.com/peak-ai/ais-service-discovery-go/function"
+	"github.com/peak-ai/ais-service-discovery-go/locator"
+	"github.com/peak-ai/ais-service-discovery-go/logger"
+	"github.com/peak-ai/ais-service-discovery-go/parser"
+	"github.com/peak-ai/ais-service-discovery-go/pubsub"
+	"github.com/peak-ai/ais-service-discovery-go/queue"
+	"github.com/peak-ai/ais-service-discovery-go/tracer"
+	"github.com/peak-ai/ais-service-discovery-go/types"
 )
 
 // Options allows the client to configure

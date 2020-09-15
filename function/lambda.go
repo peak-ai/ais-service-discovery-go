@@ -1,7 +1,7 @@
 package function
 
 import (
-	"github.com/peak-ai/ais-service-discovery-go/pkg/types"
+	"github.com/peak-ai/ais-service-discovery-go/types"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/lambda"

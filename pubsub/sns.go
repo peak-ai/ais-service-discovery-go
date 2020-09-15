@@ -3,10 +3,9 @@ package pubsub
 import (
 	"errors"
 
-	"github.com/peak-ai/ais-service-discovery-go/pkg/types"
-
 	aws "github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/sns"
+	"github.com/peak-ai/ais-service-discovery-go/types"
 )
 
 // SNSAdapter is an implementation of a PubsubAdapter using AWS SNS

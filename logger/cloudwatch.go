@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"github.com/peak-ai/ais-service-discovery-go/pkg/types"
+	"github.com/peak-ai/ais-service-discovery-go/types"
 )
 
 // NewCloudwatchLogger creates a new instance of the CloudwatchLogger
