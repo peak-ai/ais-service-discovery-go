@@ -10,7 +10,7 @@ func NewCloudwatchLogger() *CloudwatchLogger {
 }
 
 // CloudwatchLogger is an implementation of the LogAdapter using AWS CloudWatch
-type CloudwatchLogger struct {}
+type CloudwatchLogger struct{}
 
 // Log logs the mesage
 func (cw *CloudwatchLogger) Log(service *types.Service, message string) {

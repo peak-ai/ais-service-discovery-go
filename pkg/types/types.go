@@ -11,7 +11,7 @@ type Service struct {
 type Signature struct {
 	Namespace string
 	Service   string
-	Instance   string
+	Instance  string
 }
 
 // ServiceRequest represents a call to a service

@@ -25,6 +25,6 @@ func ParseAddr(signature string) (*types.Signature, error) {
 	return &types.Signature{
 		Namespace: namespace,
 		Service:   service,
-		Instance:   instance,
+		Instance:  instance,
 	}, nil
 }
