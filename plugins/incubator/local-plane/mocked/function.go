@@ -13,7 +13,7 @@ type FunctionAdapter struct {
 
 // NewFunctionAdapter -
 func NewFunctionAdapter(config config.Config) *FunctionAdapter {
-	return &FunctionAdapter{}
+	return &FunctionAdapter{config}
 }
 
 func (f *FunctionAdapter) resolve(service *types.Service) (config.Service, error) {
