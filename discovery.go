@@ -89,7 +89,7 @@ func SetTracer(tracer TraceAdapter) Option {
 // Override these services by using the Set methods.
 func WithAWSBackend() Option {
 	return func(args *Options) {
-		sess := session.Must(session.NewSession())
+		sess := session.Must(session.NewSessionWithOptions(session.Options{}))
 		args.QueueAdapter = queue.NewSQSAdapter(sqs.New(sess))
 		args.FunctionAdapter = function.NewLambdaAdapter(lambda.New(sess))
 		args.AutomateAdapter = automate.NewSSMAdapter(ssm.New(sess))

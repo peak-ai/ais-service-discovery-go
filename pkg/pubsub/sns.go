@@ -20,7 +20,7 @@ func NewSNSAdapter(client *sns.SNS) *SNSAdapter {
 }
 
 func (sa *SNSAdapter) parseOpts(opts types.Options) map[string]*sns.MessageAttributeValue {
-	atts := make(map[string]*sns.MessageAttributeValue, 0)
+	atts := make(map[string]*sns.MessageAttributeValue)
 	for key, val := range opts {
 		attributeValue, ok := val.(*sns.MessageAttributeValue)
 		if ok {
@@ -42,7 +42,7 @@ func (sa *SNSAdapter) PublishWithOpts(service *types.Service, request types.Requ
 		Message:  aws.String(string(request.Body)),
 		TopicArn: aws.String(service.Addr),
 	}
-	
+
 	if len(opts) > 0 {
 		atts := sa.parseOpts(opts)
 		input.SetMessageAttributes(atts)
