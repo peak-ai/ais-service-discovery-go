@@ -20,7 +20,7 @@ func NewSNSAdapter(client *sns.SNS) *SNSAdapter {
 }
 
 func (sa *SNSAdapter) parseOpts(opts types.Options) map[string]*sns.MessageAttributeValue {
-	atts := make(map[string]*sns.MessageAttributeValue, 0)
+	atts := make(map[string]*sns.MessageAttributeValue)
 	for key, val := range opts {
 		attributeValue, ok := val.(*sns.MessageAttributeValue)
 		if ok {
